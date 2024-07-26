@@ -1,0 +1,85 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<script src="static/frappe-gantt.js"></script>
+    <link rel="stylesheet" href="static/frappe-gantt.css">
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 h-100">
+
+<form class="m-1 row g-3" method="get">
+  <div class="col-md-3">
+<select class="form-select" name="dep" id="dep" aria-label="Выберите отдел">
+  <option selected disabled>Выберите отдел</option>
+    <option value="DEMO">DEMO Просмотр - рекомендуется</option>
+  {% for dep in depts %}
+    <option value="{{dep['id']}}">{{dep['name']}}</option>
+    {% endfor %}
+</select>  </div>
+  <div class="col-md-3">
+    <input type="date" name="start" class="form-control" id="start" value="2024-07-01">
+  </div>
+    <div class="col-md-3">
+    <input type="date" name="end" class="form-control" id="end" default="2024-07-10">
+  </div>
+    <div class="col-md-3">
+<button type="submit" class="btn btn-primary">Поиск</button>
+  </div>
+    </form>
+<div class="gantt-target dark" id="gantt" style="height: 80vh"></div>
+
+<script>
+    const form = new URLSearchParams(document.location.search);
+    const start = document.getElementById('start')
+    const end = document.getElementById('end')
+    if (form.has('start') && form.get('start')) {
+        start.value = form.get('start')
+    } else {
+      start.value = '2024-07-01'
+    }
+    if (form.has('end') && form.get('end')) {
+        end.value = form.get('end')
+    } else {
+      end.value = '2024-07-10'
+    }
+    if (form.has('dep')) {
+        document.getElementById('dep').childNodes.forEach(e => {
+            if (e.value == form.get('dep')) {
+                e.selected = true;
+            }
+        })
+    }
+    fetch('{{url_api}}/scud/data' + document.location.search)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+        const locale = navigator.language.substring(0, 2);
+
+        let tasks = data.tasks.length ? data.tasks : [{"end":"2024-07-01 12:36:56","id":"32fver","name":"Иванов Иван Иванович","progress":100,"row_index":0,"start":"2024-07-01 08:12:30"},
+        {"end":"2024-07-02 17:45:21","id":"32fver","name":"Иванов Иван Иванович","progress":100,"row_index":0,"start":"2024-07-02 09:30:00"},
+        {"end":"2024-07-03 13:20:10","id":"32fver","name":"Иванов Иван Иванович","progress":100,"row_index":0,"start":"2024-07-03 08:40:45"},
+        {"end":"2024-07-01 17:45:21","id":"73frt5","name":"Петров Петр Петрович","progress":100,"row_index":1,"start":"2024-07-01 09:30:00"},
+        {"end":"2024-07-02 15:00:00","id":"73frt5","name":"Петров Петр Петрович","progress":100,"row_index":1,"start":"2024-07-02 10:00:00"},
+        {"end":"2024-07-03 12:00:30","id":"73frt5","name":"Петров Петр Петрович","progress":100,"row_index":1,"start":"2024-07-03 08:20:00"},
+        {"end":"2024-07-02 11:40:20","id":"bg5763","name":"Смирнов Александр Иванович","progress":100,"row_index":2,"start":"2024-07-02 08:00:00"},
+        {"end":"2024-07-03 17:20:50","id":"bg5763","name":"Смирнов Александр Иванович","progress":100,"row_index":2,"start":"2024-07-03 09:30:00"},
+        {"end":"2024-07-04 15:25:15","id":"bg5763","name":"Смирнов Александр Иванович","progress":100,"row_index":2,"start":"2024-07-04 08:50:00"},
+        {"end":"2024-07-04 12:50:30","id":"ytr265","name":"Тимофеева Наталья Алексеевна","progress":100,"row_index":3,"start":"2024-07-04 08:30:00"},
+        {"end":"2024-07-03 17:10:00","id":"ytr265","name":"Тимофеева Наталья Алексеевна","progress":100,"row_index":3,"start":"2024-07-03 09:00:00"},
+        {"end":"2024-07-02 16:35:40","id":"ytr265","name":"Тимофеева Наталья Алексеевна","progress":100,"row_index":3,"start":"2024-07-02 08:40:00"}]
+
+    const names = data.names.length ? data.names : ['Иванов Иван Иванович','Петров Петр Петрович','Смирнов Александр Иванович','Тимофеева Наталья Алексеевна']
+        let gantt = new Gantt("#gantt", tasks, {
+            language: locale,
+            view_mode: "Hour",
+            view_modes: ['Hour', "Quarter Day", "Half Day", "Day", "Week", "Month"],
+            readonly: true,
+            tasks_name: names,
+            scroll_to: 'string',
+            use_condensed_rows: true
+        });
+
+    });
+
+
+</script>
+</main>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+{% include 'page/header.html' %}
+<body style="height: 100vh">
+<header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark" style="">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">TRANSCHEMICAL</a>
+
+    <ul class="navbar-nav flex-row d-md-none">
+
+        <li class="nav-item text-nowrap">
+            <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <svg class="bi">
+                    <use href="{{url_for('static', filename='icons/bootstrap-icons.svg')}}#list"/>
+                </svg>
+            </button>
+        </li>
+    </ul>
+
+
+</header>
+<div class="container-fluid">
+    <div class="row">
+        {% include 'page/nav.html' %}
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+
+{% include 'page/footer.html'%}
+</body>
+
+{% block scripts %}{% endblock %}
+
+</html>
